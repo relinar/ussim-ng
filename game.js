@@ -133,15 +133,22 @@ snake = {
   checkGrowth: function() {
     if (snake.x == food.x && snake.y == food.y) {
       game.score++;
+  
+      if (game.score % 10 === 0) {
+        spawnBalloons(25); // 🎈 Shower the screen!
+      }
+      
       if (game.score % 5 == 0 && game.fps < 60) {
         game.fps++;
-      }
+      }      
+  
       food.set(); // Generate new food after eating
     } else {
       snake.sections.shift(); // Remove tail if food not eaten
     }
   }
 };
+  
 
 food = {
   size: null,
@@ -186,6 +193,39 @@ function getKey(value) {
   }
   return null;
 }
+
+function spawnBalloons(count = 100) {
+  const container = document.getElementById('balloon-container');
+
+  const colors = ['#ff4b5c', '#ffb400', '#3ae374', '#17c0eb', '#9b59b6'];
+
+  for (let i = 0; i < count; i++) {
+    const balloon = document.createElement('div');
+    balloon.className = 'balloon';
+
+    // Random horizontal position across the screen
+    balloon.style.left = Math.random() * 100 + 'vw';
+
+    // Random size
+    const size = 30 + Math.random() * 20;
+    balloon.style.width = size + 'px';
+    balloon.style.height = size * 1.5 + 'px';
+
+    // Random background color
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    balloon.style.background = `radial-gradient(circle at 30% 30%, #fff, ${color})`;
+
+    // Slight animation delay for natural spread
+    balloon.style.animationDelay = (Math.random() * 1.5) + 's';
+
+    container.appendChild(balloon);
+
+    // Remove after animation
+    setTimeout(() => balloon.remove(), 6000);
+  }
+}
+
+
 
 // Listen for key press events
 addEventListener("keydown", function (e) {
